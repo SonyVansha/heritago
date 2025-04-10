@@ -22,7 +22,7 @@ onMounted(async () => {
 <template>
   <div>
     <h1>Admin Page</h1>
-    <p>{{ data }}</p>
+    <!-- <p>{{ data }}</p> -->
 
     <h4>This admin Page</h4>
     <button @click="logout">Logout</button>

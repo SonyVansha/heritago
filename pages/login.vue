@@ -18,8 +18,9 @@ async function login() {
     role.value = res.role
 
     if (!token.value) {
-    return navigateTo('/login')
-}
+      return router.push('/login') // atau navigateTo
+    }
+
 
 
     if (res.role === 'admin') {
