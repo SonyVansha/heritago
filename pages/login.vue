@@ -2,35 +2,42 @@
 const username = ref('')
 const password = ref('')
 const router = useRouter()
-const token = useCookie('token')
-const role = useCookie('role')
-
+const token = useCookie('token') // simpan token
+const role = useCookie('role')   // simpan role
 const { $apiFetch } = useNuxtApp()
 
 async function login() {
   try {
-    const res = await $apiFetch('/auth/login', {
+    // Request login
+    const loginRes = await $apiFetch('/auth/login', {
       method: 'POST',
-      body: { username: username.value, password: password.value }
+      body: {
+        username: username.value,
+        password: password.value
+      },
+      credentials: 'include'
     })
 
-    token.value = res.token
-    role.value = res.role
+    // Simpan token ke cookie
+    token.value = loginRes.token
 
-    if (!token.value) {
-      return router.push('/login') // atau navigateTo
-    }
+    // Ambil status user untuk mendapatkan role
+    const status = await $apiFetch('/auth/status', {
+      credentials: 'include'
+    })
 
+    // Simpan role ke cookie
+    role.value = status.user?.role || ''
 
-
-    if (res.role === 'admin') {
+    // Redirect berdasarkan role
+    if (role.value === 'admin') {
       router.push('/admin')
     } else {
       router.push('/user')
     }
   } catch (err) {
-    console.error(err)
-    alert('Login gagal')
+    console.error('Login gagal:', err)
+    alert('Login gagal. Periksa username/password.')
   }
 }
 </script>

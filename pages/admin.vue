@@ -1,7 +1,18 @@
 <script setup>
-const data = ref('')
-const { $apiFetch } = useNuxtApp()
-const { logout } = useAuth()
+// const data = ref('')
+// const { $apiFetch } = useNuxtApp()
+// const { logout } = useAuth()
+async function logout() {
+  try {
+    await $apiFetch('/auth/logout', {
+      method: 'POST',
+      credentials: 'include'
+    });
+    router.push('/login');
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 definePageMeta({
   middleware: 'auth',
@@ -9,14 +20,14 @@ definePageMeta({
 })
 
 
-onMounted(async () => {
-  try {
-    const res = await $apiFetch('/admin/dashboard')
-    data.value = res.message
-  } catch {
-    data.value = 'Unauthorized'
-  }
-})
+// onMounted(async () => {
+//   try {
+//     const res = await $apiFetch('/admin/dashboard')
+//     data.value = res.message
+//   } catch {
+//     data.value = 'Unauthorized'
+//   }
+// })
 </script>
 
 <template>

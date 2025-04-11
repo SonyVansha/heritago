@@ -2,13 +2,14 @@ export default defineNuxtRouteMiddleware((to) => {
   const token = useCookie('token')
   const userRole = useCookie('role')
 
-  // Jika belum login
+  // Belum login (token kosong)
   if (!token.value) {
     return navigateTo('/unauthorized')
   }
 
-  // Jika halaman butuh role tertentu (misalnya "admin")
-  if (to.meta.requiresRole && userRole.value !== to.meta.requiresRole) {
+  // Jika route punya syarat role tertentu (misalnya admin, user, dll)
+  const requiredRole = to.meta.requiresRole
+  if (requiredRole && userRole.value !== requiredRole) {
     return navigateTo('/unauthorized')
   }
 })
